@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import api, { aiApi } from '../services/api';
 import Navbar from '../components/Navbar';
 import { Upload, FileType, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
 
@@ -28,9 +28,7 @@ const UploadPage = () => {
     formData.append('file', file);
 
     try {
-      const response = await api.post('/api/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      const response = await aiApi.upload(formData);
       // Assuming backup or data is returned to pre-fill builder
       alert('Resume parsed successfully! Redirecting to editor...');
       navigate('/create?ai=true', { 

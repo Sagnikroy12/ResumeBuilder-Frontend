@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import api from '../services/api';
+import api, { authApi } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
 
   const checkUser = async () => {
     try {
-      const response = await api.get('/auth/me');
+      const response = await authApi.me();
       setUser(response.data.user);
     } catch (error) {
       setUser(null);
@@ -23,18 +23,18 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (email, password) => {
-    const response = await api.post('/auth/login', { email, password });
+    const response = await authApi.login(email, password);
     setUser(response.data.user);
     return response.data;
   };
 
   const logout = async () => {
-    await api.post('/auth/logout');
+    await authApi.logout();
     setUser(null);
   };
 
   const register = async (username, email, password) => {
-    const response = await api.post('/auth/register', { username, email, password });
+    const response = await authApi.register(username, email, password);
     return response.data;
   };
 

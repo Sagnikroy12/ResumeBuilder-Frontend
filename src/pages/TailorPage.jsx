@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import api, { resumeApi, aiApi } from '../services/api';
 import Navbar from '../components/Navbar';
 import { Target, FileText, Wand2, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 
@@ -19,7 +19,7 @@ const TailorPage = () => {
 
   const fetchResumes = async () => {
     try {
-      const response = await api.get('/api/dashboard');
+      const response = await resumeApi.getDashboard();
       setResumes(response.data.resumes);
     } catch (err) {
       setError('Failed to load resumes');
@@ -32,10 +32,7 @@ const TailorPage = () => {
     if (!selectedResume || !jd) return;
     setLoading(true);
     try {
-      const response = await api.post('/api/tailor', {
-        resume_id: selectedResume,
-        job_description: jd
-      });
+      const response = await aiApi.tailor(selectedResume, jd);
       alert('Resume tailored successfully! Download starting...');
       // Logic to download or redirect
       navigate('/');

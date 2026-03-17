@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
-import api from '../services/api';
+import api, { resumeApi, aiApi } from '../services/api';
 import Navbar from '../components/Navbar';
 import { User, Briefcase, Code, GraduationCap, Award, Settings, Save, Wand2, Loader2, Plus, Trash2, Layout } from 'lucide-react';
 
@@ -12,6 +12,7 @@ const ResumeBuilderPage = () => {
   const [aiLoading, setAiLoading] = useState(false);
   const [activeSection, setActiveSection] = useState('personal');
   const [usedAi, setUsedAi] = useState(location.state?.usedAi || false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const [formData, setFormData] = useState({
     personal: { name: '', email: '', phone: '', address: '', linkedin: '' },
@@ -104,14 +105,15 @@ const ResumeBuilderPage = () => {
   };
 
   const handleSave = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setLoading(true);
+    setErrorMsg('');
     try {
-      await api.post('/api/resumes', { ...formData, usedAi });
+      await resumeApi.save({ ...formData, usedAi });
       alert('Resume saved successfully!');
       navigate('/');
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to save resume');
+      setErrorMsg(err.response?.data?.message || 'Failed to save resume');
     } finally {
       setLoading(false);
     }
@@ -120,8 +122,9 @@ const ResumeBuilderPage = () => {
   const getAiSuggestion = async (section, context, opts = {}) => {
     setAiLoading(true);
     setUsedAi(true);
+    setErrorMsg('');
     try {
-      const response = await api.post('/api/suggest', { section, context });
+      const response = await aiApi.getSuggestion(section, context);
       const suggestion = response.data.suggestion;
 
       if (section === 'objective') {
@@ -137,8 +140,8 @@ const ResumeBuilderPage = () => {
       } else {
         alert('Suggestion: ' + suggestion);
       }
-    } catch {
-      alert('AI failed to provide a suggestion');
+    } catch (err) {
+      setErrorMsg('AI failed to provide a suggestion');
     } finally {
       setAiLoading(false);
     }
@@ -147,9 +150,9 @@ const ResumeBuilderPage = () => {
   const fetchPreview = async (data) => {
     setPreviewLoading(true);
     try {
-      const response = await api.post('/api/preview', data);
+      const response = await resumeApi.preview(data);
       setPreviewHtml(response.data.html);
-    } catch {
+    } catch (err) {
       setPreviewHtml('<p style="color: red;">Unable to generate preview.</p>');
     } finally {
       setPreviewLoading(false);
@@ -231,6 +234,7 @@ const ResumeBuilderPage = () => {
         </aside>
 
         <main className="builder-main glass">
+          {errorMsg && <div className="builder-error-alert">{errorMsg}</div>}
           <form id="resume-form" onSubmit={handleSave}>
             {activeSection === 'template' && (
               <div className="form-section animate-slide-in">

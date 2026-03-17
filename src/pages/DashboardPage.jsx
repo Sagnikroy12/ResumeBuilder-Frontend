@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../services/api';
+import api, { resumeApi } from '../services/api';
 import Navbar from '../components/Navbar';
 import { FileText, Download, Trash2, Plus, Sparkles, Wand2, Upload, Target, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -11,7 +11,7 @@ const ResumeMiniPreview = ({ resumeData }) => {
   useEffect(() => {
     const fetchMini = async () => {
       try {
-        const response = await api.post('/api/preview', resumeData);
+        const response = await resumeApi.preview(resumeData);
         setHtml(response.data.html);
       } catch (err) {
         setHtml('<p>Preview failed</p>');
@@ -43,7 +43,7 @@ const DashboardPage = () => {
 
   const fetchDashboardData = async () => {
     try {
-      const response = await api.get('/api/dashboard');
+      const response = await resumeApi.getDashboard();
       // Ensure resume.data is parsed if it's a string
       const processedResumes = response.data.resumes.map(r => ({
         ...r,
@@ -61,7 +61,7 @@ const DashboardPage = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this resume?')) return;
     try {
-      await api.delete(`/api/delete/${id}`);
+      await resumeApi.delete(id);
       setResumes(resumes.filter(r => r.id !== id));
     } catch (err) {
       alert('Failed to delete resume');
@@ -70,7 +70,7 @@ const DashboardPage = () => {
 
   const handleDownload = async (id, title) => {
     try {
-      const response = await api.get(`/api/download/${id}`, { responseType: 'blob' });
+      const response = await resumeApi.download(id);
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
