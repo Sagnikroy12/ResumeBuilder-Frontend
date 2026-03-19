@@ -79,11 +79,19 @@ const DashboardPage = () => {
       link.click();
       link.remove();
     } catch (err) {
-      if (err.response?.status === 402 || err.response?.status === 403) {
-        alert(err.response.data.message);
-        // Handle redirection if needed
+      if (err.response?.data instanceof Blob) {
+        try {
+          const text = await err.response.data.text();
+          const errorData = JSON.parse(text);
+          alert(errorData.message);
+          if (err.response.status === 402 && errorData.redirect) {
+            navigate(errorData.redirect);
+          }
+        } catch (parseErr) {
+          alert('Download failed');
+        }
       } else {
-        alert('Download failed');
+        alert(err.response?.data?.message || 'Download failed');
       }
     }
   };
@@ -118,7 +126,7 @@ const DashboardPage = () => {
               <h4>Upload & Parse</h4>
               <p>Magic auto-fill</p>
             </Link>
-            <Link to="/tailor" className="action-card">
+            <Link to="/tailor" className="action-card glass">
               <div className="action-icon tailor"><Target /></div>
               <h4>Tailor to JD</h4>
               <p>Optimize for jobs</p>

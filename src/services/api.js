@@ -34,6 +34,7 @@ export const authApi = {
   logout: () => api.post('/auth/logout'),
   register: (username, email, password) => api.post('/auth/register', { username, email, password }),
   me: () => api.get('/auth/me'),
+  togglePremium: () => api.post('/auth/toggle-premium'),
 };
 
 // Resume Endpoints

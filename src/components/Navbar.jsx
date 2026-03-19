@@ -1,15 +1,25 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { authApi } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { Sparkles, LayoutDashboard, FilePlus, LogOut, User } from 'lucide-react';
+import { Sparkles, LayoutDashboard, FilePlus, LogOut, User, ShieldCheck } from 'lucide-react';
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, checkUser } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     await logout();
     navigate('/login');
+  };
+
+  const handleTogglePremium = async () => {
+    try {
+      await authApi.togglePremium();
+      await checkUser();
+    } catch (err) {
+      console.error('Toggle failed', err);
+    }
   };
 
   return (
@@ -32,6 +42,16 @@ const Navbar = () => {
               <span className="premium-badge">Pro</span>
             ) : (
               <Link to="/upgrade" className="upgrade-btn">Upgrade to Pro</Link>
+            )}
+            {user.email === 'sagnikruproy11@gmail.com' && (
+              <button 
+                onClick={handleTogglePremium} 
+                className="master-toggle-btn"
+                title="Toggle Master Pro Status"
+              >
+                <ShieldCheck size={18} />
+                <span>Toggle Tier</span>
+              </button>
             )}
             <div className="user-profile">
               <User size={18} />
