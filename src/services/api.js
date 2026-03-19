@@ -39,6 +39,7 @@ export const authApi = {
 // Resume Endpoints
 export const resumeApi = {
   getDashboard: () => api.get('/api/dashboard'),
+  getById: (id) => api.get(`/api/resumes/${id}`),
   save: (data) => api.post('/api/resumes', data),
   delete: (id) => api.delete(`/api/delete/${id}`),
   download: (id) => api.get(`/api/download/${id}`, { responseType: 'blob' }),

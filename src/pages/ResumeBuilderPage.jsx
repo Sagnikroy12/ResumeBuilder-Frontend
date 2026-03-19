@@ -39,8 +39,32 @@ const ResumeBuilderPage = () => {
           : [],
         template: prev.template // Keep the selected template
       }));
+    } else {
+        // If no state, but we have a resume_id in URL, fetch it from backend
+        const resumeId = searchParams.get('resume_id');
+        if (resumeId) {
+            const fetchResume = async () => {
+                setLoading(true);
+                try {
+                    const response = await resumeApi.getById(resumeId);
+                    const rd = response.data.data;
+                    setFormData(prev => ({
+                        ...prev,
+                        ...rd,
+                        experience: Array.isArray(rd.experience) 
+                          ? rd.experience.map(exp => typeof exp === 'object' ? exp : { title: exp, duration: '', points: '' })
+                          : [],
+                    }));
+                } catch (err) {
+                    setErrorMsg('Failed to load the saved resume.');
+                } finally {
+                    setLoading(false);
+                }
+            };
+            fetchResume();
+        }
     }
-  }, [location.state]);
+  }, [location.state, searchParams]);
 
   const [previewHtml, setPreviewHtml] = useState('');
   const [previewLoading, setPreviewLoading] = useState(false);
