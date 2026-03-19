@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import api, { resumeApi } from '../services/api';
 import Navbar from '../components/Navbar';
-import { FileText, Download, Trash2, Plus, Sparkles, Wand2, Upload, Target, Loader2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { FileText, Download, Trash2, Plus, Sparkles, Wand2, Upload, Target, Loader2, MoreVertical, Copy, Eye } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const ResumeMiniPreview = ({ resumeData }) => {
   const [html, setHtml] = useState('');
@@ -32,6 +33,7 @@ const ResumeMiniPreview = ({ resumeData }) => {
 };
 
 const DashboardPage = () => {
+  const { user } = useAuth();
   const [resumes, setResumes] = useState([]);
   const [templates, setTemplates] = useState({});
   const [loading, setLoading] = useState(true);
@@ -103,33 +105,39 @@ const DashboardPage = () => {
       <Navbar />
       
       <main className="dashboard-content">
-        <header className="content-header">
-          <h1>My Workspace</h1>
-          <p>Create and manage your professional resumes</p>
+        <header className="dashboard-hero">
+          <div className="hero-text">
+            <h1>Welcome back, {user?.username}!</h1>
+            <p>Your career journey continues here. What are we building today?</p>
+            <div className="hero-stats">
+              <span className="stat-pill"><b>{resumes.length}</b> Resumes Created</span>
+            </div>
+          </div>
+          <div className="hero-cta">
+            <Link to="/create" className="primary-create-btn">
+              <Plus size={24} />
+              <span>Create New Resume</span>
+            </Link>
+          </div>
         </header>
 
         <section className="quick-actions">
-          <h3>✨ Quick Create</h3>
+          <h3>Tools & Extensions</h3>
           <div className="actions-grid">
-            <Link to="/create" className="action-card">
-              <div className="action-icon manual"><Plus /></div>
-              <h4>Manual</h4>
-              <p>Build from scratch</p>
-            </Link>
-            <Link to="/create?ai=true" className="action-card">
+            <Link to="/create?ai=true" className="action-card glass">
               <div className="action-icon ai"><Wand2 /></div>
               <h4>AI Assisted</h4>
-              <p>Smart suggestions</p>
+              <p>Build with smart AI suggestions</p>
             </Link>
-            <Link to="/upload" className="action-card">
+            <Link to="/upload" className="action-card glass">
               <div className="action-icon upload"><Upload /></div>
-              <h4>Upload & Parse</h4>
-              <p>Magic auto-fill</p>
+              <h4>Magic Import</h4>
+              <p>Parse existing PDF or Docx</p>
             </Link>
             <Link to="/tailor" className="action-card glass">
               <div className="action-icon tailor"><Target /></div>
               <h4>Tailor to JD</h4>
-              <p>Optimize for jobs</p>
+              <p>Optimize for specific job roles</p>
             </Link>
           </div>
         </section>
@@ -179,20 +187,30 @@ const DashboardPage = () => {
                   <div className="resume-card-details">
                     <div className="resume-card-header">
                       <h3>{resume.title}</h3>
-                      <button onClick={() => handleDelete(resume.id)} className="delete-btn" title="Delete Resume">
-                        <Trash2 size={16} />
-                      </button>
+                      <div className="resume-card-actions">
+                        <button onClick={() => handleDelete(resume.id)} className="delete-btn" title="Delete Resume">
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </div>
                     <div className="resume-card-body">
-                      <p className="created-date">Created: {new Date(resume.created_at).toLocaleDateString()}</p>
-                      <div className="resume-actions">
-                        <button 
-                          onClick={() => handleDownload(resume.id, resume.title)}
-                          className="download-btn-compact"
-                        >
-                          <Download size={16} />
-                          <span>PDF</span>
-                        </button>
+                      <p className="created-date">Edited {new Date(resume.created_at).toLocaleDateString()}</p>
+                      <div className="resume-meta">
+                        <span className={`status-indicator ${resume.used_ai ? 'pro' : ''}`}>
+                          {resume.used_ai ? 'AI Enhanced' : 'Standard'}
+                        </span>
+                        <div className="card-primary-actions">
+                          <button 
+                            onClick={() => handleDownload(resume.id, resume.title)}
+                            className="download-btn-compact"
+                            title="Download PDF"
+                          >
+                            <Download size={16} />
+                          </button>
+                          <Link to={`/create?resume_id=${resume.id}`} className="edit-btn-circle" title="Edit Resume">
+                            <Eye size={16} />
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </div>

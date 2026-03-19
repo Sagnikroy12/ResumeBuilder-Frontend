@@ -349,29 +349,128 @@ body {
   font-size: 1.3rem;
 }
 
+/* Dashboard Hero Section */
+.dashboard-hero {
+  background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+  border-radius: 24px;
+  padding: 4rem 3rem;
+  margin-bottom: 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.hero-text h1 {
+  font-size: 3rem;
+  font-weight: 850;
+  letter-spacing: -0.04em;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.hero-text p {
+  font-size: 1.25rem;
+  color: var(--text-light);
+  max-width: 500px;
+}
+
+.hero-stats {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.stat-pill {
+  background: rgba(255, 255, 255, 0.5);
+  padding: 0.5rem 1.25rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+.stat-pill b {
+  color: var(--primary);
+  margin-right: 0.25rem;
+}
+
+/* Card Actions Styling */
+.card-primary-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.download-btn-compact, .edit-btn-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0,0,0,0.05);
+  background: #f8fafc;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.download-btn-compact:hover, .edit-btn-circle:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.primary-create-btn {
+  background: var(--primary);
+  color: white;
+  padding: 1.25rem 2.5rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.3);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.primary-create-btn:hover {
+  transform: scale(1.05) translateY(-5px);
+  box-shadow: 0 25px 30px -5px rgba(99, 102, 241, 0.4);
+}
+
+/* Action Cards - Modern Grid */
 .actions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 5rem;
 }
 
 .action-card {
   background: var(--surface);
-  padding: 2rem;
-  border-radius: var(--radius);
+  padding: 2.5rem;
+  border-radius: 20px;
   text-decoration: none;
   color: inherit;
-  text-align: center;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.04);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  position: relative;
 }
 
 .action-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  transform: translateY(-12px);
+  box-shadow: 0 25px 40px -10px rgba(0, 0, 0, 0.1);
   border-color: var(--primary-light);
 }
 
@@ -403,17 +502,23 @@ body {
 }
 
 .template-card {
-  flex: 0 0 300px;
-  border-radius: var(--radius);
+  flex: 0 0 320px;
+  border-radius: 20px;
   overflow: hidden;
   background: var(--surface);
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: var(--shadow);
+  transition: all 0.4s;
+}
+
+.template-card:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-lg);
 }
 
 .template-preview {
-  height: 180px;
-  background: #f1f3f5;
+  height: 220px;
+  background: linear-gradient(45deg, #f3f4f6, #ffffff);
   position: relative;
   display: flex;
   align-items: center;
@@ -601,8 +706,40 @@ body {
 
 .delete-btn:hover { background: var(--error); }
 
-.resume-card-body { padding: 1.5rem; }
-.resume-card-body p { color: var(--text-light); margin-bottom: 1.5rem; }
+.resume-card-body { 
+  padding: 1.5rem;
+  background: #fff;
+}
+
+.resume-card-body p { 
+  color: var(--text-light); 
+  margin-bottom: 1.25rem; 
+  font-size: 0.9rem;
+}
+
+.resume-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f1f1f1;
+}
+
+.status-indicator {
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.status-indicator.pro {
+  background: #f0fdf4;
+  color: #16a34a;
+}
 
 .download-btn {
   width: 100%;
