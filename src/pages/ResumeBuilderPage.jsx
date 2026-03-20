@@ -19,7 +19,7 @@ const ResumeBuilderPage = () => {
     objective: '',
     experience: [],
     skills: '',
-    projects: '',
+    projects: [],
     education: '',
     certifications: '',
     custom_sections: [],
@@ -33,10 +33,13 @@ const ResumeBuilderPage = () => {
       setFormData(prev => ({
         ...prev,
         ...rd,
-        // Ensure experience is always an array of objects
+        // Ensure experience and projects are always arrays of objects
         experience: Array.isArray(rd.experience) 
           ? rd.experience.map(exp => typeof exp === 'object' ? exp : { title: exp, duration: '', points: '' })
           : [],
+        projects: Array.isArray(rd.projects)
+          ? rd.projects.map(proj => typeof proj === 'object' ? proj : { title: 'Project', points: proj })
+          : (typeof rd.projects === 'string' && rd.projects ? [{ title: 'Project', points: rd.projects }] : []),
         template: prev.template // Keep the selected template
       }));
     } else {
@@ -54,6 +57,9 @@ const ResumeBuilderPage = () => {
                         experience: Array.isArray(rd.experience) 
                           ? rd.experience.map(exp => typeof exp === 'object' ? exp : { title: exp, duration: '', points: '' })
                           : [],
+                        projects: Array.isArray(rd.projects)
+                          ? rd.projects.map(proj => typeof proj === 'object' ? proj : { title: 'Project', points: proj })
+                          : (typeof rd.projects === 'string' && rd.projects ? [{ title: 'Project', points: rd.projects }] : []),
                     }));
                 } catch (err) {
                     setErrorMsg('Failed to load the saved resume.');
@@ -108,6 +114,28 @@ const ResumeBuilderPage = () => {
     });
   };
 
+  const addProject = () => {
+    setFormData(prev => ({
+      ...prev,
+      projects: [...(Array.isArray(prev.projects) ? prev.projects : []), { title: '', points: '' }]
+    }));
+  };
+
+  const removeProject = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      projects: prev.projects.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateProject = (index, field, value) => {
+    setFormData(prev => {
+      const newProj = [...prev.projects];
+      newProj[index] = { ...newProj[index], [field]: value };
+      return { ...prev, projects: newProj };
+    });
+  };
+
   const addCustomSection = () => {
     setFormData(prev => ({
       ...prev,
@@ -156,7 +184,19 @@ const ResumeBuilderPage = () => {
       } else if (section === 'skills') {
         handleInputChange('skills', null, suggestion);
       } else if (section === 'projects') {
-        handleInputChange('projects', null, suggestion);
+        if (typeof opts.index === 'number') {
+          updateProject(opts.index, 'points', suggestion);
+        } else {
+          const lastIndex = (formData.projects || []).length - 1;
+          if (lastIndex >= 0) {
+            updateProject(lastIndex, 'points', suggestion);
+          } else {
+            setFormData(prev => ({
+              ...prev,
+              projects: [{ title: 'New Project', points: suggestion }]
+            }));
+          }
+        }
       } else if (section === 'certifications') {
         handleInputChange('certifications', null, suggestion);
       } else if (section === 'experience' && typeof opts.index === 'number') {
@@ -479,27 +519,76 @@ const ResumeBuilderPage = () => {
               <div className="form-section animate-slide-in">
                 <div className="section-header">
                   <h2>📂 Projects & Certifications</h2>
-                  <button
-                    type="button"
-                    className="ai-btn"
-                    onClick={() => getAiSuggestion('projects', `${formData.projects || formData.personal.name}`)}
-                    disabled={aiLoading}
-                  >
-                    {aiLoading ? <Loader2 size={16} className="animate-spin" /> : <Wand2 size={16} />}
-                    Suggest
-                  </button>
+                  <div className="section-header-actions">
+                    <button
+                      type="button"
+                      className="ai-btn"
+                      disabled={aiLoading || !Array.isArray(formData.projects) || formData.projects.length === 0}
+                      onClick={() => {
+                        const lastIndex = formData.projects.length - 1;
+                        const lastProj = formData.projects[lastIndex] || {};
+                        const context = `${lastProj.title || ''}`.trim();
+                        getAiSuggestion('projects', context, { index: lastIndex });
+                      }}
+                    >
+                      {aiLoading ? <Loader2 size={16} className="animate-spin" /> : <Wand2 size={16} />}
+                      Suggest
+                    </button>
+                    <button type="button" onClick={addProject} className="add-btn">
+                      <Plus size={16} /> Add Project
+                    </button>
+                  </div>
                 </div>
-                <div className="input-group">
-                  <label>Projects</label>
-                  <textarea 
-                    value={formData.projects}
-                    onChange={(e) => handleInputChange('projects', null, e.target.value)}
-                    placeholder="- Portfolio Website\n- E-commerce App"
-                    rows={4}
-                  />
+                
+                <div className="experience-list">
+                  {Array.isArray(formData.projects) && formData.projects.map((proj, index) => (
+                    <div key={index} className="experience-item glass">
+                      <div className="experience-item-actions">
+                        <button type="button" onClick={() => removeProject(index)} className="remove-item-btn">
+                          <Trash2 size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          className="ai-btn mini"
+                          onClick={() => {
+                            const context = `${proj.title || ''}`.trim();
+                            getAiSuggestion('projects', context, { index });
+                          }}
+                          disabled={aiLoading}
+                          title="Suggest details"
+                        >
+                          <Wand2 size={14} />
+                        </button>
+                      </div>
+                      <div className="form-grid">
+                        <div className="input-field full">
+                          <label>Project Title</label>
+                          <input 
+                            type="text" 
+                            value={proj.title}
+                            onChange={(e) => updateProject(index, 'title', e.target.value)}
+                            placeholder="E-commerce Platform"
+                          />
+                        </div>
+                        <div className="input-field full">
+                          <label>Description / Key Features</label>
+                          <textarea 
+                            value={proj.points}
+                            onChange={(e) => updateProject(index, 'points', e.target.value)}
+                            placeholder="- Developed using React and Node.js\n- Integrated Stripe for payments"
+                            rows={3}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {(!formData.projects || formData.projects.length === 0) && (
+                    <p className="empty-notice">No projects added yet.</p>
+                  )}
                 </div>
-                <div className="input-group mt-4">
-                  <label>Certifications</label>
+
+                <div className="input-group mt-6">
+                  <label className="section-subheader">🎖️ Certifications</label>
                   <textarea 
                     value={formData.certifications}
                     onChange={(e) => handleInputChange('certifications', null, e.target.value)}
