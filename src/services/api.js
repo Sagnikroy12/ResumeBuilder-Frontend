@@ -49,7 +49,8 @@ export const resumeApi = {
 
 // AI/Specialized Endpoints
 export const aiApi = {
-  getSuggestion: (section, context) => api.post('/api/suggest', { section, context }),
+  getSuggestion: (section, context, full_resume = null) => 
+    api.post('/api/suggest', { section, context, full_resume }),
   upload: (formData) => api.post('/api/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   }),

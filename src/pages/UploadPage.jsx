@@ -12,12 +12,19 @@ const UploadPage = () => {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    if (selectedFile && selectedFile.type === 'application/pdf') {
+    const allowedTypes = [
+      'application/pdf', 
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/msword',
+      'text/plain'
+    ];
+    
+    if (selectedFile && allowedTypes.includes(selectedFile.type)) {
       setFile(selectedFile);
       setError('');
-    } else {
+    } else if (selectedFile) {
       setFile(null);
-      setError('Please upload a valid PDF file');
+      setError('Please upload a valid PDF, Word, or Text file');
     }
   };
 
@@ -54,7 +61,7 @@ const UploadPage = () => {
               <Upload size={32} />
             </div>
             <h1>Magic Parse</h1>
-            <p>Upload your existing PDF resume and we'll extract the data for you.</p>
+            <p>Upload your existing resume (PDF, Word, or Text) and we'll extract the data for you.</p>
           </header>
 
           <div className={`dropzone ${file ? 'has-file' : ''}`} onClick={() => document.getElementById('file-input').click()}>
@@ -62,7 +69,7 @@ const UploadPage = () => {
               type="file" 
               id="file-input" 
               hidden 
-              accept=".pdf" 
+              accept=".pdf,.doc,.docx,.txt" 
               onChange={handleFileChange}
             />
             {file ? (
@@ -74,7 +81,7 @@ const UploadPage = () => {
             ) : (
               <div className="prompt">
                 <Upload size={48} className="prompt-icon" />
-                <span>Click or drag and drop your PDF here</span>
+                <span>Click or drag and drop your file here</span>
               </div>
             )}
           </div>

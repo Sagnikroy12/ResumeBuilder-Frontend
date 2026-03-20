@@ -176,8 +176,15 @@ const ResumeBuilderPage = () => {
     setUsedAi(true);
     setErrorMsg('');
     try {
-      const response = await aiApi.getSuggestion(section, context);
+      const response = await aiApi.getSuggestion(section, context, formData);
       const suggestion = response.data.suggestion;
+      const error = response.data.error;
+
+      if (error) {
+        alert("AI Error: " + error);
+        setErrorMsg(error);
+        return;
+      }
 
       if (section === 'objective') {
         handleInputChange('objective', null, suggestion);
@@ -205,7 +212,9 @@ const ResumeBuilderPage = () => {
         alert('Suggestion: ' + suggestion);
       }
     } catch (err) {
-      setErrorMsg('AI failed to provide a suggestion');
+      const msg = err.response?.data?.error || 'AI failed to provide a suggestion';
+      setErrorMsg(msg);
+      alert("AI Error: " + msg);
     } finally {
       setAiLoading(false);
     }
