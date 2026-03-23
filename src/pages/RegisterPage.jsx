@@ -4,7 +4,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { UserPlus, Mail, Lock, User, Loader2 } from 'lucide-react';
 
 const RegisterPage = () => {
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -16,8 +15,13 @@ const RegisterPage = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters long');
+      setLoading(false);
+      return;
+    }
     try {
-      await register(username, email, password);
+      await register(email, password);
       navigate('/login');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to register');
@@ -40,20 +44,6 @@ const RegisterPage = () => {
         {error && <div className="auth-alert error">{error}</div>}
 
         <form onSubmit={handleSubmit} className="auth-form">
-          <div className="input-group">
-            <label htmlFor="username">Username</label>
-            <div className="input-wrapper">
-              <User size={18} className="input-icon" />
-              <input
-                type="text"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="johndoe"
-                required
-              />
-            </div>
-          </div>
 
           <div className="input-group">
             <label htmlFor="email">Email Address</label>

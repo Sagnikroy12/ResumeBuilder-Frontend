@@ -30,7 +30,7 @@ api.interceptors.response.use(
 export const authApi = {
   login: (email, password) => api.post('/auth/login', { email, password }),
   logout: () => api.post('/auth/logout'),
-  register: (username, email, password) => api.post('/auth/register', { username, email, password }),
+  register: (email, password) => api.post('/auth/register', { email, password }),
   me: () => api.get('/auth/me'),
   togglePremium: () => api.post('/auth/toggle-premium'),
 };
