@@ -13,6 +13,7 @@ const ResumeBuilderPage = () => {
   const [activeSection, setActiveSection] = useState('personal');
   const [usedAi, setUsedAi] = useState(location.state?.usedAi || false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [showMobilePreview, setShowMobilePreview] = useState(false);
 
   const [formData, setFormData] = useState({
     personal: { name: '', email: '', phone: '', address: '', linkedin: '' },
@@ -247,27 +248,33 @@ const ResumeBuilderPage = () => {
   useEffect(() => {
     const calculateScale = () => {
       if (previewContainerRef.current) {
-        const padding = 40;
+        const isMobile = window.innerWidth <= 1024;
+        const padding = isMobile ? 20 : 40;
         const containerWidth = previewContainerRef.current.clientWidth - padding;
-        const a4WidthMm = 210;
-        const mmToPx = 3.7795275591; // Standard conversion at 96 DPI
-        const a4WidthPx = a4WidthMm * mmToPx;
         
-        const scale = containerWidth / a4WidthPx;
-        setPreviewScale(scale);
+        // A4 Width is 210mm. 
+        // We'll use a fixed pixel value for A4 width to ensure consistent scaling.
+        const a4WidthPx = 794; // ~210mm at 96 DPI
+        
+        if (containerWidth > 0) {
+          const scale = Math.min(containerWidth / a4WidthPx, 1);
+          setPreviewScale(scale);
+        }
       }
     };
 
     calculateScale();
-    // Add a small delay to ensure container is fully rendered
-    const timer = setTimeout(calculateScale, 100);
+    // Multiple attempts to ensure the layout is stable
+    const timer1 = setTimeout(calculateScale, 100);
+    const timer2 = setTimeout(calculateScale, 500);
     
     window.addEventListener('resize', calculateScale);
     return () => {
       window.removeEventListener('resize', calculateScale);
-      clearTimeout(timer);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
     };
-  }, []);
+  }, [activeSection, previewHtml]); // Re-calculate when section or content changes
 
   const sections = [
     { id: 'template', label: 'Template', icon: <Layout size={18} /> },
@@ -306,14 +313,17 @@ const ResumeBuilderPage = () => {
           </div>
         </aside>
 
-        {/* Mobile Floating Save Button */}
-        <div className="mobile-save-bar">
+        {/* Mobile Floating Save & Preview Buttons */}
+        <div className="mobile-action-bar">
+          <button onClick={() => setShowMobilePreview(!showMobilePreview)} className="preview-toggle-btn">
+            {showMobilePreview ? <><User size={18} /> Edit</> : <><Layout size={18} /> Preview</>}
+          </button>
           <button onClick={handleSave} className="save-btn" disabled={loading}>
             {loading ? <Loader2 size={18} className="animate-spin" /> : <><Save size={18} /> Save</>}
           </button>
         </div>
 
-        <main className="builder-main glass">
+        <main className={`builder-main glass ${showMobilePreview ? 'mobile-hidden' : ''}`}>
           {errorMsg && <div className="builder-error-alert">{errorMsg}</div>}
           <form id="resume-form" onSubmit={handleSave}>
             {activeSection === 'template' && (
@@ -655,7 +665,7 @@ const ResumeBuilderPage = () => {
           </form>
         </main>
 
-        <aside className="builder-preview glass">
+        <aside className={`builder-preview glass ${showMobilePreview ? 'mobile-visible' : ''}`}>
           <div className="preview-header">
             <h2>Live Preview</h2>
             {previewLoading && <span className="preview-loading">Updating...</span>}

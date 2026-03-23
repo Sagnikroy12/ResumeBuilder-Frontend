@@ -1472,14 +1472,14 @@ body {
   flex: 1;
   background: #525659;
   padding: 1.5rem;
-  overflow: auto; /* Allow scrolling if scaled page is too big */
+  overflow: auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   border-radius: 8px;
   position: relative;
-  min-height: 0;
+  min-height: 500px; /* Ensure it's never too small */
 }
 
 .preview-scaler-wrapper {
@@ -1497,7 +1497,7 @@ body {
   transform-origin: top center;
   background: white;
   box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
   position: relative;
 }
@@ -1616,30 +1616,9 @@ body {
   background-color: rgba(52, 152, 219, 0.05);
 }
 
-.mobile-save-bar {
-  display: none; /* Hidden by default */
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  padding: 1rem;
-  border-top: 1px solid var(--glass-border);
-  z-index: 1000;
-  box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
-}
-
-.mobile-save-bar .save-btn {
-  width: 100%;
-}
-
 @media (max-width: 1024px) {
-  .mobile-save-bar {
-    display: block;
-  }
-  
   .builder-main {
-    margin-bottom: 80px; /* Space for the save bar */
+    margin-bottom: 80px; /* Space for the action bar */
   }
 }
 
@@ -1728,26 +1707,50 @@ body {
     display: none;
   }
 
-  .sidebar-footer {
-    display: none; /* Hide save button in the horizontal sidebar on mobile */
+  .mobile-action-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 1rem;
+    border-top: 1px solid var(--glass-border);
+    z-index: 1000;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+    gap: 1rem;
   }
 
-  .section-btn {
-    flex: 0 0 auto;
-    padding: 0.8rem 1.2rem;
-    white-space: nowrap;
+  .mobile-action-bar button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
   }
 
-  .builder-main, .builder-preview {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    position: relative !important;
-    top: 0 !important;
+  .preview-toggle-btn {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    padding: 0.8rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+  }
+  
+  .builder-main.mobile-hidden {
+    display: none !important;
   }
 
   .builder-preview {
-    min-height: 500px;
+    display: none !important;
+  }
+
+  .builder-preview.mobile-visible {
+    display: flex !important;
+    min-height: 80vh;
+    margin-bottom: 80px;
+    overflow-x: hidden;
   }
 
   .tailor-grid {
