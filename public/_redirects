@@ -1,1 +1,3 @@
-/*  /index.html  200
+/api/*  https://smartresumebuilder.onrender.com/api/:splat  200
+/auth/*  https://smartresumebuilder.onrender.com/auth/:splat  200
+/*      /index.html                                          200
