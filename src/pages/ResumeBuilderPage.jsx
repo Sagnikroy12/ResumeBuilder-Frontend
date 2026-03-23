@@ -312,10 +312,10 @@ const ResumeBuilderPage = () => {
           </div>
         </aside>
 
-        {/* Mobile Floating Save Button */}
+        {/* Mobile Save Button moved into fixed footer in CSS if needed, or kept here as a floating bar */}
         <div className="mobile-save-bar">
           <button onClick={handleSave} className="save-btn" disabled={loading}>
-            {loading ? <Loader2 size={18} className="animate-spin" /> : <><Save size={18} /> Save</>}
+            {loading ? <Loader2 size={18} className="animate-spin" /> : <><Save size={18} /> Save Resume</>}
           </button>
         </div>
 

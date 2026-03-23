@@ -1079,9 +1079,82 @@ body {
 
 @media (max-width: 1024px) {
   .builder-container {
-    grid-template-columns: 1fr;
+    display: flex; /* Switch from grid to flex for better stacking */
+    flex-direction: column;
     height: auto;
-    overflow: auto;
+    overflow-y: visible;
+    padding: 0.5rem;
+    gap: 1.5rem;
+  }
+
+  .builder-sidebar, 
+  .builder-main, 
+  .builder-preview {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    position: static !important; /* Unstick them */
+    overflow: visible !important;
+    padding: 1rem !important;
+  }
+
+  /* Make sidebar horizontal on mobile for better UX */
+  .builder-sidebar {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    white-space: nowrap;
+    gap: 1rem;
+    padding: 0.5rem !important;
+  }
+  
+  .section-btn {
+    flex: 0 0 auto;
+    padding: 0.5rem 1rem !important;
+    font-size: 0.85rem;
+  }
+  
+  .section-btn span {
+    display: none; /* Hide labels on very small screens or keep them? */
+  }
+  
+  @media (min-width: 600px) {
+    .section-btn span { display: inline; }
+  }
+
+  .sidebar-footer {
+    display: none; /* Already have mobile-save-bar */
+  }
+
+  .builder-main {
+    box-shadow: none;
+    background: transparent;
+  }
+  
+  .form-section {
+    padding: 1.5rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  }
+
+  .builder-preview {
+    background: transparent;
+    box-shadow: none;
+    padding: 0 !important;
+  }
+  
+  .preview-content {
+    margin: 0 !important;
+    display: flex;
+    justify-content: center;
+    width: 100% !important;
+  }
+
+  .preview-scaler-wrapper {
+    width: 100% !important;
+    display: flex;
+    justify-content: center;
   }
 }
 
