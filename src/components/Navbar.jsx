@@ -2,11 +2,13 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authApi } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { Sparkles, LayoutDashboard, FilePlus, LogOut, User, ShieldCheck } from 'lucide-react';
+import { Sparkles, LayoutDashboard, FilePlus, LogOut, User, ShieldCheck, Menu, X } from 'lucide-react';
+import { useState } from 'react';
 
 const Navbar = () => {
   const { user, logout, checkUser } = useAuth();
   const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -31,21 +33,29 @@ const Navbar = () => {
         </Link>
       </div>
 
-      <div className="nav-links">
+      <button 
+        className="mobile-menu-toggle" 
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        aria-label="Toggle menu"
+      >
+        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      <div className={`nav-links ${isMobileMenuOpen ? 'mobile-active' : ''}`}>
         {user ? (
           <>
-            <Link to="/" className="nav-link">
+            <Link to="/" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>
               <LayoutDashboard size={18} />
               <span>Dashboard</span>
             </Link>
             {user.is_premium ? (
               <span className="premium-badge">Pro</span>
             ) : (
-              <Link to="/upgrade" className="upgrade-btn">Upgrade to Pro</Link>
+              <Link to="/upgrade" className="upgrade-btn" onClick={() => setIsMobileMenuOpen(false)}>Upgrade to Pro</Link>
             )}
             {user.email === 'sagnikruproy11@gmail.com' && (
               <button 
-                onClick={handleTogglePremium} 
+                onClick={() => { handleTogglePremium(); setIsMobileMenuOpen(false); }} 
                 className="master-toggle-btn"
                 title="Toggle Master Pro Status"
               >
@@ -63,8 +73,8 @@ const Navbar = () => {
           </>
         ) : (
           <>
-            <Link to="/login" className="nav-link">Login</Link>
-            <Link to="/register" className="nav-btn">Sign Up Free</Link>
+            <Link to="/login" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Login</Link>
+            <Link to="/register" className="nav-btn" onClick={() => setIsMobileMenuOpen(false)}>Sign Up Free</Link>
           </>
         )}
       </div>

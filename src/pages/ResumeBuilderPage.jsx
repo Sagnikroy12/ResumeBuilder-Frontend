@@ -306,6 +306,13 @@ const ResumeBuilderPage = () => {
           </div>
         </aside>
 
+        {/* Mobile Floating Save Button */}
+        <div className="mobile-save-bar">
+          <button onClick={handleSave} className="save-btn" disabled={loading}>
+            {loading ? <Loader2 size={18} className="animate-spin" /> : <><Save size={18} /> Save</>}
+          </button>
+        </div>
+
         <main className="builder-main glass">
           {errorMsg && <div className="builder-error-alert">{errorMsg}</div>}
           <form id="resume-form" onSubmit={handleSave}>
