@@ -13,7 +13,6 @@ const ResumeBuilderPage = () => {
   const [activeSection, setActiveSection] = useState('personal');
   const [usedAi, setUsedAi] = useState(location.state?.usedAi || false);
   const [errorMsg, setErrorMsg] = useState('');
-  const [showMobilePreview, setShowMobilePreview] = useState(false);
 
   const [formData, setFormData] = useState({
     personal: { name: '', email: '', phone: '', address: '', linkedin: '' },
@@ -250,7 +249,7 @@ const ResumeBuilderPage = () => {
       if (previewContainerRef.current) {
         const isMobile = window.innerWidth <= 1024;
         const padding = isMobile ? 20 : 40;
-        const containerWidth = previewContainerRef.current.clientWidth - padding;
+        const containerWidth = Math.max(previewContainerRef.current.clientWidth - padding, 280);
         
         // A4 Width is 210mm. 
         // We'll use a fixed pixel value for A4 width to ensure consistent scaling.
@@ -313,17 +312,14 @@ const ResumeBuilderPage = () => {
           </div>
         </aside>
 
-        {/* Mobile Floating Save & Preview Buttons */}
-        <div className="mobile-action-bar">
-          <button onClick={() => setShowMobilePreview(!showMobilePreview)} className="preview-toggle-btn">
-            {showMobilePreview ? <><User size={18} /> Edit</> : <><Layout size={18} /> Preview</>}
-          </button>
+        {/* Mobile Floating Save Button */}
+        <div className="mobile-save-bar">
           <button onClick={handleSave} className="save-btn" disabled={loading}>
             {loading ? <Loader2 size={18} className="animate-spin" /> : <><Save size={18} /> Save</>}
           </button>
         </div>
 
-        <main className={`builder-main glass ${showMobilePreview ? 'mobile-hidden' : ''}`}>
+        <main className="builder-main glass">
           {errorMsg && <div className="builder-error-alert">{errorMsg}</div>}
           <form id="resume-form" onSubmit={handleSave}>
             {activeSection === 'template' && (
@@ -665,7 +661,7 @@ const ResumeBuilderPage = () => {
           </form>
         </main>
 
-        <aside className={`builder-preview glass ${showMobilePreview ? 'mobile-visible' : ''}`}>
+        <aside className="builder-preview glass">
           <div className="preview-header">
             <h2>Live Preview</h2>
             {previewLoading && <span className="preview-loading">Updating...</span>}

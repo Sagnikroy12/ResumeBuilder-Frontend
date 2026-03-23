@@ -36,7 +36,6 @@ const UploadPage = () => {
 
     try {
       const response = await aiApi.upload(formData);
-      // Assuming backup or data is returned to pre-fill builder
       alert('Resume parsed successfully! Redirecting to editor...');
       navigate('/create?ai=true', { 
         state: { 
@@ -45,7 +44,9 @@ const UploadPage = () => {
         } 
       });
     } catch (err) {
-      setError(err.response?.data?.error || 'Upload failed');
+      console.error('Upload error details:', err.response || err);
+      const msg = err.response?.data?.error || err.message || 'Upload failed. Please check your internet connection and try again.';
+      setError(msg);
     } finally {
       setLoading(false);
     }

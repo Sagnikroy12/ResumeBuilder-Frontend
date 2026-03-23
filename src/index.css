@@ -1616,9 +1616,30 @@ body {
   background-color: rgba(52, 152, 219, 0.05);
 }
 
+.mobile-save-bar, .mobile-action-bar {
+  display: none !important; /* Strictly hidden on desktop */
+}
+
 @media (max-width: 1024px) {
+  .mobile-save-bar {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 1rem;
+    border-top: 1px solid var(--glass-border);
+    z-index: 1000;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+  }
+
+  .mobile-save-bar .save-btn {
+    width: 100%;
+  }
+
   .builder-main {
-    margin-bottom: 80px; /* Space for the action bar */
+    margin-bottom: 80px;
   }
 }
 
@@ -1707,50 +1728,18 @@ body {
     display: none;
   }
 
-  .mobile-action-bar {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: white;
-    padding: 1rem;
-    border-top: 1px solid var(--glass-border);
-    z-index: 1000;
-    box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
-    gap: 1rem;
-  }
-
-  .mobile-action-bar button {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-  }
-
-  .preview-toggle-btn {
-    background: rgba(99, 102, 241, 0.1);
-    color: var(--primary);
-    border: 1px solid rgba(99, 102, 241, 0.2);
-    padding: 0.8rem;
-    border-radius: var(--radius-sm);
-    font-weight: 600;
-  }
-  
-  .builder-main.mobile-hidden {
-    display: none !important;
+  .builder-main, .builder-preview {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    position: relative !important;
+    top: 0 !important;
+    display: flex !important; /* Ensure visibility */
   }
 
   .builder-preview {
-    display: none !important;
-  }
-
-  .builder-preview.mobile-visible {
-    display: flex !important;
     min-height: 80vh;
     margin-bottom: 80px;
-    overflow-x: hidden;
   }
 
   .tailor-grid {
@@ -1838,11 +1827,11 @@ body {
 
 @media (max-width: 1280px) {
   .builder-preview {
-    width: 400px;
+    width: 350px;
   }
   
   .builder-container {
-    padding: 0 2%;
-    gap: 1rem;
+    padding: 0 1%;
+    gap: 0.5rem;
   }
 }

@@ -51,9 +51,7 @@ export const resumeApi = {
 export const aiApi = {
   getSuggestion: (section, context, full_resume = null) => 
     api.post('/api/suggest', { section, context, full_resume }),
-  upload: (formData) => api.post('/api/upload', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }),
+  upload: (formData) => api.post('/api/upload', formData),
   tailor: (resume_id, job_description) => api.post('/api/tailor', { resume_id, job_description }),
 };
 
