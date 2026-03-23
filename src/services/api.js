@@ -8,10 +8,6 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ||
 const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true, // Important for session cookies
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-  },
 });
 
 // Response Interceptor for Global Error Handling
@@ -54,7 +50,11 @@ export const resumeApi = {
 export const aiApi = {
   getSuggestion: (section, context, full_resume = null) => 
     api.post('/api/suggest', { section, context, full_resume }),
-  upload: (formData) => api.post('/api/upload', formData),
+  upload: (formData) => api.post('/api/upload', formData, {
+    headers: { 
+      'Content-Type': undefined // Let browser set it with boundary
+    }
+  }),
   tailor: (resume_id, job_description) => api.post('/api/tailor', { resume_id, job_description }),
 };
 

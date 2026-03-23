@@ -38,7 +38,7 @@ const UploadPage = () => {
     if (!file) return;
     setLoading(true);
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', file, file.name);
 
     try {
       const response = await aiApi.upload(formData);
