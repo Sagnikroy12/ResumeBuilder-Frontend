@@ -12,6 +12,8 @@ const UploadPage = () => {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
+
     const allowedTypes = [
       'application/pdf', 
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -19,10 +21,14 @@ const UploadPage = () => {
       'text/plain'
     ];
     
-    if (selectedFile && allowedTypes.includes(selectedFile.type)) {
+    const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
+    const allowedExtensions = ['pdf', 'doc', 'docx', 'txt'];
+    
+    // Check by MIME type OR extension (safer for mobile)
+    if (allowedTypes.includes(selectedFile.type) || allowedExtensions.includes(fileExtension)) {
       setFile(selectedFile);
       setError('');
-    } else if (selectedFile) {
+    } else {
       setFile(null);
       setError('Please upload a valid PDF, Word, or Text file');
     }
