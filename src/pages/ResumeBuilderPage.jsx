@@ -13,6 +13,7 @@ const ResumeBuilderPage = () => {
   const [activeSection, setActiveSection] = useState('personal');
   const [usedAi, setUsedAi] = useState(location.state?.usedAi || false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
 
   const [formData, setFormData] = useState({
     personal: { name: '', email: '', phone: '', address: '', linkedin: '' },
@@ -79,6 +80,15 @@ const ResumeBuilderPage = () => {
   const [previewScale, setPreviewScale] = useState(1);
 
   const handleInputChange = (section, field, value) => {
+    // Clear field error when user types
+    if (fieldErrors[section]) {
+      setFieldErrors(prev => {
+        const next = { ...prev };
+        delete next[section];
+        return next;
+      });
+    }
+
     if (field) {
       setFormData(prev => ({
         ...prev,
@@ -175,16 +185,33 @@ const ResumeBuilderPage = () => {
     setAiLoading(true);
     setUsedAi(true);
     setErrorMsg('');
+    
+    // Determine the key for this field error
+    let fieldKey = section;
+    if (typeof opts.index === 'number') {
+      fieldKey = `${section}-${opts.index}`;
+    } else if (section === 'projects' && (formData.projects || []).length > 0) {
+      fieldKey = `projects-${formData.projects.length - 1}`;
+    }
+    
+    // Clear previous error for this field
+    setFieldErrors(prev => {
+      const next = { ...prev };
+      delete next[fieldKey];
+      return next;
+    });
+
     try {
       const response = await aiApi.getSuggestion(section, context, formData);
       const suggestion = response.data.suggestion;
       const error = response.data.error;
 
       if (error) {
-        alert("AI Error: " + error);
-        setErrorMsg(error);
+        setFieldErrors(prev => ({ ...prev, [fieldKey]: error }));
         return;
       }
+
+      if (!suggestion) return;
 
       if (section === 'objective') {
         handleInputChange('objective', null, suggestion);
@@ -213,8 +240,7 @@ const ResumeBuilderPage = () => {
       }
     } catch (err) {
       const msg = err.response?.data?.error || 'AI failed to provide a suggestion';
-      setErrorMsg(msg);
-      alert("AI Error: " + msg);
+      setFieldErrors(prev => ({ ...prev, [fieldKey]: msg }));
     } finally {
       setAiLoading(false);
     }
@@ -402,17 +428,15 @@ const ResumeBuilderPage = () => {
               <div className="form-section animate-slide-in">
                 <div className="section-header">
                   <h2>🎯 Professional Summary</h2>
-                  {isAiMode && (
-                    <button 
-                      type="button" 
-                      className="ai-btn"
-                      onClick={() => getAiSuggestion('objective', formData.personal.name)}
-                      disabled={aiLoading}
-                    >
-                      {aiLoading ? <Loader2 size={16} className="animate-spin" /> : <Wand2 size={16} />}
-                      Magic Suggest
-                    </button>
-                  )}
+                  <button 
+                    type="button" 
+                    className="ai-btn"
+                    onClick={() => getAiSuggestion('objective', formData.personal.name)}
+                    disabled={aiLoading}
+                  >
+                    {aiLoading ? <Loader2 size={16} className="animate-spin" /> : <Wand2 size={16} />}
+                    Magic Suggest
+                  </button>
                 </div>
                 <textarea 
                   value={formData.objective}
@@ -420,6 +444,11 @@ const ResumeBuilderPage = () => {
                   placeholder="Tell us about your career goals and key achievements..."
                   rows={8}
                 />
+                {fieldErrors['objective'] && (
+                  <p className="field-error-text" style={{ color: '#e74c3c', fontSize: '0.85rem', marginTop: '8px', fontWeight: '500' }}>
+                    ⚠️ {fieldErrors['objective']}
+                  </p>
+                )}
               </div>
             )}
 
@@ -494,6 +523,11 @@ const ResumeBuilderPage = () => {
                             placeholder="- Built scalable microservices\n- Led team of 5"
                             rows={4}
                           />
+                          {fieldErrors[`experience-${index}`] && (
+                            <p className="field-error-text" style={{ color: '#e74c3c', fontSize: '0.85rem', marginTop: '8px', fontWeight: '500' }}>
+                              ⚠️ {fieldErrors[`experience-${index}`]}
+                            </p>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -522,6 +556,11 @@ const ResumeBuilderPage = () => {
                   placeholder="Programming: React, Node.js\nDesign: Figma, Adobe XD"
                   rows={8}
                 />
+                {fieldErrors['skills'] && (
+                  <p className="field-error-text" style={{ color: '#e74c3c', fontSize: '0.85rem', marginTop: '8px', fontWeight: '500' }}>
+                    ⚠️ {fieldErrors['skills']}
+                  </p>
+                )}
               </div>
             )}
 
@@ -600,6 +639,11 @@ const ResumeBuilderPage = () => {
                             placeholder="- Developed using React and Node.js\n- Integrated Stripe for payments"
                             rows={3}
                           />
+                          {fieldErrors[`projects-${index}`] && (
+                            <p className="field-error-text" style={{ color: '#e74c3c', fontSize: '0.85rem', marginTop: '8px', fontWeight: '500' }}>
+                              ⚠️ {fieldErrors[`projects-${index}`]}
+                            </p>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -617,6 +661,11 @@ const ResumeBuilderPage = () => {
                     placeholder="- AWS Certified Solutions Architect\n- Meta Front-End Developer"
                     rows={4}
                   />
+                  {fieldErrors['certifications'] && (
+                    <p className="field-error-text" style={{ color: '#e74c3c', fontSize: '0.85rem', marginTop: '8px', fontWeight: '500' }}>
+                      ⚠️ {fieldErrors['certifications']}
+                    </p>
+                  )}
                 </div>
               </div>
             )}
