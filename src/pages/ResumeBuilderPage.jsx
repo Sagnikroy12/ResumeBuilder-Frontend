@@ -689,9 +689,11 @@ const ResumeBuilderPage = () => {
                           onChange={(e) => updateCustomSection(index, 'title', e.target.value)}
                           placeholder="Section Title (e.g. Languages)"
                         />
-                        <button type="button" onClick={() => removeCustomSection(index)} className="remove-item-btn">
-                          <Trash2 size={16} />
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button type="button" onClick={() => removeCustomSection(index)} className="remove-item-btn">
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </div>
                       <textarea 
                         value={section.points}
