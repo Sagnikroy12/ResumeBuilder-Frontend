@@ -1,7 +1,8 @@
 {
-  "name": "frontend",
+  "name": "smart-resume-ai",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Premium AI-powered resume builder for modern professionals.",
   "type": "module",
   "scripts": {
     "dev": "vite",

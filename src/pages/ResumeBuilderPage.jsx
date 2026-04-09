@@ -332,9 +332,9 @@ const ResumeBuilderPage = () => {
           ))}
           <div className="sidebar-footer">
             <button onClick={handleSave} className="save-btn" disabled={loading}>
-              {loading ? <Loader2 className="animate-spin" /> : <><Save size={18} /> Save Resume</>}
+              {loading ? <Loader2 className="animate-spin" /> : <><Save size={18} /> Save Progress</>}
             </button>
-            {usedAi && <p className="ai-notice">✨ AI Enhanced Pricing Applies</p>}
+            {usedAi && <p className="ai-notice">✨ AI Intelligence Active</p>}
           </div>
         </aside>
 

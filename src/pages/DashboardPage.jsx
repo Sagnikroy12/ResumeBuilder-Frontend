@@ -107,18 +107,29 @@ const DashboardPage = () => {
       <main className="dashboard-content">
         <header className="dashboard-hero">
           <div className="hero-text">
-            <h1>Welcome back, {user?.username}!</h1>
-            <p>Your career journey continues here. What are we building today?</p>
-            <div className="hero-stats">
-              <span className="stat-pill"><b>{resumes.length}</b> Resumes Created</span>
+            <h1 className="animate-fade-in-up">Welcome back, {user?.username} <span className="wave">👋</span></h1>
+            <p className="animate-fade-in-up-delay">Your professional journey continues here. Build your next career move with AI precision.</p>
+            <div className="hero-stats animate-fade-in-up-delay-2">
+              <span className="stat-pill">
+                <FileText size={16} />
+                <b>{resumes.length}</b> Resumes Created
+              </span>
+              <span className="stat-pill">
+                <Sparkles size={16} />
+                <b>{resumes.filter(r => r.used_ai).length}</b> AI Optimized
+              </span>
             </div>
           </div>
-          <div className="hero-cta">
+          <div className="hero-cta animate-fade-in-up-delay-2">
             <Link to="/create" className="primary-create-btn">
               <Plus size={24} />
               <span>Create New Resume</span>
             </Link>
           </div>
+          
+          {/* Decorative Background Elements */}
+          <div className="hero-glow-1"></div>
+          <div className="hero-glow-2"></div>
         </header>
 
         <section className="quick-actions">
