@@ -1,98 +1,22 @@
-<<<<<<< HEAD
 # ✨ SmartResume AI
 
 ![SmartResume AI Banner](./public/promo_banner.png)
 
-> **The next generation of career tools. Built with AI. Designed for professionals.**
+> **The React-based frontend for an AI-powered SaaS resume builder. Build, customize, and export professional resumes with real-time AI assistance.**
 
-SmartResume AI is a premium, AI-powered resume builder designed to help professionals land their dream jobs. By combining modern aesthetics with powerful AI suggestions, we simplify the process of creating high-impact, ATS-friendly resumes.
+🌐 **Live App**: [smartresumebuilder.onrender.com](https://smartresumebuilder.onrender.com)  
+⚙️ **Backend Repo**: [ResumeBuilder (Flask API)](https://github.com/Sagnikroy12/ResumeBuilder)  
+
+---
 
 ## 🚀 Key Features
 
-- **🪄 AI Magic Suggestions**: Real-time content suggestions for objectives, experience, and skills powered by OpenAI.
-- **🖼️ Premium Templates**: Choose from classic, modern, and executive templates designed by industry experts.
-- **⚡ Live A4 Preview**: See your changes in real-time with an accurate A4-scaled preview.
-- **🛠️ Smart Import & Tailoring**: Upload your existing PDF or paste a Job Description, and let AI tailor your resume to beat the ATS.
-- **💎 Pro Features**: Unlock unlimited downloads, priority support, and advanced AI models.
-
-## 🛠️ Technology Stack
-
-- **Frontend**: React 19 + Vite
-- **Styling**: Vanilla CSS (Premium Glassmorphism Design System)
-- **Icons**: Lucide React
-- **Services**: Axios, React Router 7
-- **Backend API**: SmartResume-Backend (Python/Flask)
-
-## 📦 Getting Started
-
-### Prerequisites
-
-- Node.js (v18+)
-- npm / yarn
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Sagnikroy12/ResumeBuilder-Frontend.git
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
-
-## 🌐 Production URL
-
-The application is deployed at: [https://smartresumebuilder.onrender.com/](https://smartresumebuilder.onrender.com/)
-
----
-
-## 📸 Screenshots
-
-| Dashboard | Resume Builder |
-|-----------|----------------|
-| ![Dashboard](./src/assets/hero.png) | *Live Preview System* |
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-<p align="center">Made with ❤️ for professionals worldwide.</p>
-=======
-# 🎨 AI-Powered Resume Builder — Frontend
-
-> **The React-based frontend for an AI-powered SaaS resume builder. Build, customize, and export professional resumes with real-time AI assistance.**
-
-🌐 **Live App**: [aipoweredresumebuilder.netlify.app](https://aipoweredresumebuilder.netlify.app)  
-⚙️ **Backend Repo**: [ResumeBuilder (Flask API)](https://github.com/Sagnikroy12/ResumeBuilder)  
-🔗 **Backend API**: [smartresumebuilder.onrender.com](https://smartresumebuilder.onrender.com)
-
----
-
-## ✨ Features
-
-- 🤖 **AI-Powered Content** — Generate professional resume content using multiple AI providers (Gemini, OpenAI, Claude, DeepSeek)
-- 📝 **Interactive Resume Builder** — Drag-and-drop sections with real-time preview
-- 📄 **Multiple Templates** — Classic, Modern, and ATS-optimized professional designs
-- 📤 **PDF Upload & Tailor** — Upload existing resumes and AI-tailor them for specific job descriptions
-- 🔐 **User Authentication** — Secure login/register with persistent sessions
-- 💎 **Premium Tier** — Upgrade flow with tiered access control
-- 📱 **Responsive Design** — Works seamlessly on desktop, tablet, and mobile
-- ⚡ **Fast & Modern** — Built with React 19 + Vite 8 for instant HMR and optimized builds
+- 🪄 **AI Magic Suggestions**: Real-time content suggestions for objectives, experience, and skills powered by OpenAI, Gemini, Claude, and DeepSeek.
+- 🖼️ **Premium Templates**: Choose from classic, modern, and executive templates designed by industry experts.
+- ⚡ **Live A4 Preview**: See your changes in real-time with an accurate A4-scaled preview.
+- 🛠️ **Smart Import & Tailoring**: Upload your existing PDF or paste a Job Description, and let AI tailor your resume to beat the ATS.
+- 🔐 **User Authentication**: Secure login/register with persistent sessions.
+- 💎 **Pro Features**: Unlock unlimited downloads, priority support, and advanced AI models.
 
 ---
 
@@ -102,13 +26,13 @@ This is the **frontend** of a decoupled full-stack application:
 
 ```
 ┌─────────────────────┐         ┌─────────────────────┐         ┌─────────────────┐
-│   React Frontend    │  REST   │   Flask Backend      │  SQL    │   PostgreSQL    │
-│   (Netlify)         │ ◄─────► │   (Render)           │ ◄─────► │   (Supabase)    │
+│   React Frontend    │  REST   │   Flask Backend     │  SQL    │   PostgreSQL    │
+│   (Netlify/Render)  │ ◄─────► │   (Render)          │ ◄─────► │   (Supabase)    │
 └─────────────────────┘         └─────────────────────┘         └─────────────────┘
          │                               │
          ▼                               ▼
-   Netlify CDN                  ┌─────────────────┐
-   (Static Hosting)             │   AI Services   │
+   Static Hosting               ┌─────────────────┐
+                                │   AI Services   │
                                 │  Gemini/OpenAI  │
                                 │  Claude/DeepSeek│
                                 └─────────────────┘
@@ -123,11 +47,11 @@ This is the **frontend** of a decoupled full-stack application:
 | **Framework**   | React 19 with JSX                       |
 | **Build Tool**  | Vite 8                                  |
 | **Routing**     | React Router DOM 7                      |
+| **Styling**     | Vanilla CSS (Glassmorphism Design)      |
 | **HTTP Client** | Axios (with credentials for sessions)   |
 | **Icons**       | Lucide React                            |
 | **State**       | React Context API                       |
 | **Linting**     | ESLint 9 with React Hooks plugin        |
-| **Hosting**     | Netlify (Continuous Deployment)         |
 
 ---
 
@@ -157,32 +81,36 @@ ResumeBuilder-Frontend/
 │   └── main.jsx                 # Application entry point
 ├── index.html                   # HTML template
 ├── vite.config.js               # Vite configuration
-├── eslint.config.js             # ESLint configuration
 ├── package.json                 # Dependencies & scripts
 └── README.md                    # This file
 ```
 
 ---
 
-## 🚀 Quick Start
+## 📦 Quick Start
 
 ### Prerequisites
-- Node.js 18+
-- npm or yarn
+
+- Node.js (v18+)
+- npm / yarn
 
 ### Setup
 
-```bash
-# Clone
-git clone https://github.com/Sagnikroy12/ResumeBuilder-Frontend.git
-cd ResumeBuilder-Frontend
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Sagnikroy12/ResumeBuilder-Frontend.git
+   cd ResumeBuilder-Frontend
+   ```
 
-# Install dependencies
-npm install
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-# Start dev server
-npm run dev                    # http://localhost:5173
-```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
 ### Build for Production
 
@@ -193,26 +121,31 @@ npm run preview                # Preview production build
 
 ---
 
+## 📸 Screenshots
+
+| Dashboard | Resume Builder |
+|-----------|----------------|
+| ![Dashboard](./src/assets/hero.png) | *Live Preview System* |
+
+---
+
 ## 🔗 Related Repositories
 
 | Repository | Description | Tech |
 |------------|-------------|------|
-| [ResumeBuilder](https://github.com/Sagnikroy12/ResumeBuilder) | Backend REST API | Flask, PostgreSQL, Gunicorn |
-| **This Repo** | Frontend Application | React, Vite, Netlify |
+| [ResumeBuilder](https://github.com/Sagnikroy12/ResumeBuilder) | Backend REST API | Flask, PostgreSQL |
+| **This Repo** | Frontend Application | React, Vite |
 
 ---
 
-## 📜 License
-
-MIT License
-
-## 👤 Author
+## 📄 License & Author
 
 **Sagnik Roy**  
 📧 sagnikroyofficial24@gmail.com  
 🔗 [GitHub](https://github.com/Sagnikroy12)
 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 ---
 
-**Status**: Production Ready ✅ · **Version**: 1.0.0 · **Last Updated**: April 2026
->>>>>>> 694d40f886e29b2f5e4f4e693fe8b1435fc2063d
+<p align="center">Made with ❤️ for professionals worldwide.</p>
