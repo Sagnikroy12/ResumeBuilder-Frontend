@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api, { resumeApi, aiApi } from '../services/api';
+import { parsePdfBasic } from '../utils/pdfParser';
 import Navbar from '../components/Navbar';
 import { Target, FileText, Wand2, Loader2, AlertCircle, CheckCircle, Upload, FileType } from 'lucide-react';
 
@@ -54,12 +55,17 @@ const TailorPage = () => {
       let resumeIdToTailor = selectedResume;
 
       if (file) {
-        // Parse PDF through AI upload endpoint
-        const formData = new FormData();
-        formData.append('file', file);
-        const uploadResp = await aiApi.upload(formData);
+        let parsedData;
+        try {
+          const formData = new FormData();
+          formData.append('file', file);
+          const uploadResp = await aiApi.upload(formData);
+          parsedData = uploadResp.data?.extracted_data || uploadResp.data || {};
+        } catch (aiErr) {
+          console.warn('AI parse failed, falling back to basic parsing:', aiErr.message);
+          parsedData = await parsePdfBasic(file);
+        }
         
-        let parsedData = uploadResp.data?.extracted_data || uploadResp.data || {};
         if (!parsedData.title) parsedData.title = file.name.replace('.pdf', '');
 
         // Save parsed data to DB to get a valid resume ID
