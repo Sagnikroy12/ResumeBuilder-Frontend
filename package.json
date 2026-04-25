@@ -5,10 +5,10 @@
   "description": "Premium AI-powered resume builder for modern professionals.",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "node scripts/run-vite-branch.mjs dev",
+    "build": "node scripts/run-vite-branch.mjs build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "node scripts/run-vite-branch.mjs preview"
   },
   "dependencies": {
     "axios": "^1.13.6",
