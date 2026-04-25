@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import api, { resumeApi, aiApi } from '../services/api';
 import Navbar from '../components/Navbar';
-import { User, Briefcase, Code, GraduationCap, Award, Settings, Save, Wand2, Loader2, Plus, Trash2, Layout } from 'lucide-react';
+import { User, Briefcase, Code, GraduationCap, Award, Settings, Save, Wand2, Loader2, Plus, Trash2, Layout, PanelLeftClose, PanelLeftOpen, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 
 const ResumeBuilderPage = () => {
   const [searchParams] = useSearchParams();
@@ -78,6 +78,8 @@ const ResumeBuilderPage = () => {
   const previewTimeoutRef = useRef(null);
   const previewContainerRef = useRef(null);
   const [previewScale, setPreviewScale] = useState(1);
+  const [previewZoom, setPreviewZoom] = useState(1);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const handleInputChange = (section, field, value) => {
     // Clear field error when user types
@@ -313,18 +315,40 @@ const ResumeBuilderPage = () => {
   ];
 
   const isAiMode = searchParams.get('ai') === 'true';
+  const isMobileViewport = typeof window !== 'undefined' && window.innerWidth <= 1024;
+  const effectiveScale = Math.max(0.25, Math.min(previewScale * previewZoom, 2.5));
+
+  const changeZoom = (delta) => {
+    setPreviewZoom(prev => Math.max(0.5, Math.min(prev + delta, 2)));
+  };
 
   return (
     <div className="builder-page">
       <Navbar />
       
-      <div className="builder-container">
-        <aside className="builder-sidebar glass">
+      <div className={`builder-container ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+        <aside className={`builder-sidebar glass ${sidebarCollapsed ? 'collapsed' : ''}`}>
+          <div className="sidebar-top-controls">
+            <button
+              type="button"
+              className="icon-control-btn"
+              onClick={() => setSidebarCollapsed(prev => !prev)}
+              title={sidebarCollapsed ? 'Expand sections' : 'Collapse sections'}
+            >
+              {sidebarCollapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
+              <span>{sidebarCollapsed ? 'Expand' : 'Collapse'}</span>
+            </button>
+          </div>
+
           {sections.map(s => (
             <button 
               key={s.id}
               className={`section-btn ${activeSection === s.id ? 'active' : ''}`}
-              onClick={() => setActiveSection(s.id)}
+              onClick={() => {
+                setActiveSection(s.id);
+                if (isMobileViewport) setSidebarCollapsed(true);
+              }}
+              title={sidebarCollapsed ? s.label : undefined}
             >
               {s.icon}
               <span>{s.label}</span>
@@ -715,20 +739,34 @@ const ResumeBuilderPage = () => {
         <aside className="builder-preview glass">
           <div className="preview-header">
             <h2>Live Preview</h2>
-            {previewLoading && <span className="preview-loading">Updating...</span>}
+            <div className="preview-header-controls">
+              {previewLoading && <span className="preview-loading">Updating...</span>}
+              <div className="zoom-controls">
+                <button type="button" className="icon-control-btn" onClick={() => changeZoom(-0.1)} title="Zoom out">
+                  <ZoomOut size={14} />
+                </button>
+                <span className="zoom-level">{Math.round(previewZoom * 100)}%</span>
+                <button type="button" className="icon-control-btn" onClick={() => changeZoom(0.1)} title="Zoom in">
+                  <ZoomIn size={14} />
+                </button>
+                <button type="button" className="icon-control-btn" onClick={() => setPreviewZoom(1)} title="Reset zoom">
+                  <RotateCcw size={14} />
+                </button>
+              </div>
+            </div>
           </div>
           <div className="preview-content" ref={previewContainerRef}>
             {previewHtml ? (
               <div 
                 className="preview-scaler-wrapper" 
                 style={{ 
-                  height: `calc(${297 * previewScale}mm + 100px)` /* Extra space for overflow */
+                  height: `calc(${297 * effectiveScale}mm + 100px)` /* Extra space for overflow */
                 }}
               >
                 <div 
                   className="preview-scaler" 
                   style={{ 
-                    transform: `scale(${previewScale})`,
+                    transform: `scale(${effectiveScale})`,
                     height: 'auto',
                     minHeight: '297mm'
                   }}
