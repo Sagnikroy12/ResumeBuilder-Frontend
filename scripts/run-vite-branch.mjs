@@ -4,7 +4,7 @@ const mode = process.argv[2] || 'dev';
 const passthroughArgs = process.argv.slice(3);
 
 const RENDER_API_URL = 'https://smartresumebuilder.onrender.com';
-const LOCAL_API_URL = 'http://localhost:5000';
+const LOCAL_API_URL = 'http://127.0.0.1:5000';
 const PRODUCTION_BRANCHES = new Set(['main', 'master', 'production']);
 
 const resolveCurrentBranch = () => {
