@@ -56,13 +56,23 @@ const TailorPage = () => {
 
       if (file) {
         let parsedData;
+        let useBasicParsing = false;
         try {
           const formData = new FormData();
           formData.append('file', file);
           const uploadResp = await aiApi.upload(formData);
-          parsedData = uploadResp.data?.extracted_data || uploadResp.data || {};
+          const data = uploadResp.data?.extracted_data || uploadResp.data || {};
+          if (data.error || data.message?.includes('All AI providers failed')) {
+            useBasicParsing = true;
+          } else {
+            parsedData = data;
+          }
         } catch (aiErr) {
           console.warn('AI parse failed, falling back to basic parsing:', aiErr.message);
+          useBasicParsing = true;
+        }
+        
+        if (useBasicParsing) {
           parsedData = await parsePdfBasic(file);
         }
         
